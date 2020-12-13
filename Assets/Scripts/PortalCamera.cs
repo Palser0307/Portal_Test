@@ -47,7 +47,7 @@ public class PortalCamera : MonoBehaviour
 
         // Right eye.
         v = _cameraForPortal.transform.localPosition;
-        _cameraForPortal.transform.localPosition = v + new Vector3(VrEye.stereoSeparation, 0f, 0f);
+        _cameraForPortal.transform.localPosition = v + new Vector3(VrEye.stereoSeparation/2f, 0f, 0f);
 
         _cameraForPortal.projectionMatrix = VrEye.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right);
         _cameraForPortal.targetTexture = _rightEyeRenderTexture;
