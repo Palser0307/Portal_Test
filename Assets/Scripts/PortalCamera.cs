@@ -34,6 +34,7 @@ public class PortalCamera : MonoBehaviour
     {
         // Left eye.
        var v = _cameraForPortal.transform.localPosition;
+       //VrEye.stereoSeparation：両目の距離
        _cameraForPortal.transform.localPosition = v + new Vector3(-VrEye.stereoSeparation/2f, 0f, 0f);
 
         //projectionMatrixの設定
@@ -46,7 +47,7 @@ public class PortalCamera : MonoBehaviour
 
         // Right eye.
         v = _cameraForPortal.transform.localPosition;
-        _cameraForPortal.transform.localPosition = v + new Vector3(VrEye.stereoSeparation/2f, 0f, 0f);
+        _cameraForPortal.transform.localPosition = v + new Vector3(VrEye.stereoSeparation, 0f, 0f);
 
         _cameraForPortal.projectionMatrix = VrEye.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right);
         _cameraForPortal.targetTexture = _rightEyeRenderTexture;

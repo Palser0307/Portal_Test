@@ -49,10 +49,10 @@ Shader "Unlit/PortalShader"
 
                 fixed4 col=fixed4(0,0.,0.,0.);
                 if(unity_StereoEyeIndex==0){
-                    col=tex2D(_LeftEyeTexture,-sUV);
+                    col=tex2D(_LeftEyeTexture,fixed2(sUV.x,1.-sUV.y));
                 }
                 else{
-                    col=tex2D(_RightEyeTexture,sUV);
+                    col=tex2D(_RightEyeTexture,fixed2(sUV.x,1.-sUV.y));
                 }
                 return col;
             }
