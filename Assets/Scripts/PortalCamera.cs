@@ -17,7 +17,7 @@ public class PortalCamera : MonoBehaviour
     protected void Awake()
     {
         _cameraForPortal = GetComponent<Camera>();
-        _cameraForPortal.enabled = false;
+       // _cameraForPortal.enabled = false;
         
 
         //RenderTextureの生成

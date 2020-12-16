@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ public class PortalManager : MonoBehaviour
         //位置を保存しておく
         _camPos=new Vector3[2];
         foreach(GameObject camera in cam){
-            _camPos[i]=camera.transform.position;
+            _camPos[0]=camera.transform.position;
             i++;
         }
     }
@@ -32,10 +32,15 @@ public class PortalManager : MonoBehaviour
 
         //Portal用カメラの同期
         //localpositionは相対座標．ポータル自体からの距離．
-        Debug.Log(_portalIndex);
+        
         //前に進むとは，ポータル方向に進むことである．
-            cam[_portalIndex].transform.localPosition=playcam.transform.position-Portals[_portalIndex].transform.position;
+        Vector3 pos=playcam.transform.position-Portals[_portalIndex].transform.position;
+        pos.y=playcam.transform.position.y;
+
+            cam[_portalIndex].transform.localPosition=pos;
             cam[_portalIndex].transform.localRotation=playcam.transform.localRotation;
+
+            //cam[_portalIndex].transform.localPosition+=
     }
 
     void OnTriggerEnter(Collider other)
@@ -44,11 +49,13 @@ public class PortalManager : MonoBehaviour
         if(other.CompareTag("portal")){
             this.GetComponent<Transform>().position=cam[0].GetComponent<Transform>().position;
 
-            Debug.Log(cam[0].transform.position.x);
-            Debug.Log(this.transform.position.x);
             
-            //camを次の奴へ(今回はループ)
-            _portalIndex=(_portalIndex+1)%2;
+            //camを次の奴へ更新(今回はループ)
+
+            //座標を戻してやる
+            cam[_portalIndex].transform.position=_camPos[_portalIndex];
+            //更新
+            //_portalIndex=(_portalIndex+1)%2;
         }
     }
 }
