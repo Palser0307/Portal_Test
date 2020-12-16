@@ -1,10 +1,11 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
+﻿
 Shader "Unlit/PortalShader"
 {
     Properties
     {
+        [NoScaleOffset]
         _LeftEyeTexture("Left Eye Texture",2D)="black"{}
+        [NoScaleOffset]
         _RightEyeTexture("Right Eye Texture",2D)="white"{}
     }
     SubShader
@@ -17,7 +18,7 @@ Shader "Unlit/PortalShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile__STEREO_RENDER
+            #pragma multi_compile __ STEREO_RENDER
 
             #include "UnityCG.cginc"
 
@@ -43,18 +44,27 @@ Shader "Unlit/PortalShader"
                 return o;
             }
 
-            fixed4 frag (v2f i,UNITY_VPOS_TYPE screenPos:VPOS) : SV_Target
+            fixed4 frag (v2f i,UNITY_VPOS_TYPE screenPos: VPOS) : SV_Target
             {
-                fixed2 sUV =(screenPos.x/_ScreenParams.x,screenPos.y/_ScreenParams.y);
+                fixed2 sUV =screenPos.xy/_ScreenParams.xy;
 
-                fixed4 col=fixed4(0,0.,0.,0.);
+                fixed4 col=fixed4(0.0,0.0,0.0,0.0);
+
+                /*VRのディスプレイは，円状にくりぬかれるので，sUVにする必要があったんですねぇ～！*/
                 if(unity_StereoEyeIndex==0){
-                    col=tex2D(_LeftEyeTexture,fixed2(sUV.x,1.-sUV.y));
+                    col=tex2D(_LeftEyeTexture,fixed2(sUV.x,1.0-sUV.y));
                 }
                 else{
-                    col=tex2D(_RightEyeTexture,fixed2(sUV.x,1.-sUV.y));
+                    col=tex2D(_RightEyeTexture,fixed2(sUV.x,1.0-sUV.y));
                 }
                 return col;
+               /* fixed4 col=fixed4(0,0,0,0);
+                if(unity_StereoEyeIndex==0){
+                    col=tex2D(_LeftEyeTexture,i.uv);
+                }else{
+                    col=tex2D(_RightEyeTexture,i.uv);
+                }
+                return col;*/
             }
             ENDCG
         }

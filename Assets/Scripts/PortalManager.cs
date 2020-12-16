@@ -15,6 +15,9 @@ public class PortalManager : MonoBehaviour
     private int _portalIndex=0;
     //ポータルの初期位置
     private Vector3[] _camPos;
+
+    //Mover
+    public Mover mover;
     void Start()
     {
         int i=0;
@@ -30,6 +33,9 @@ public class PortalManager : MonoBehaviour
     void Update()
     {
 
+        //Playerの移動
+        mover.Move(this.gameObject);
+
         //Portal用カメラの同期
         //localpositionは相対座標．ポータル自体からの距離．
         
@@ -38,22 +44,25 @@ public class PortalManager : MonoBehaviour
         pos.y=playcam.transform.position.y;
 
             cam[_portalIndex].transform.localPosition=pos;
+            
             cam[_portalIndex].transform.localRotation=playcam.transform.localRotation;
 
-            //cam[_portalIndex].transform.localPosition+=
+
+            
     }
 
     void OnTriggerEnter(Collider other)
     {
         //あたったのがPortalならカメラの位置へワープ
         if(other.CompareTag("portal")){
-            this.GetComponent<Transform>().position=cam[0].GetComponent<Transform>().position;
+            //位置の同期
+            Transform transform=this.transform;
+            transform.position=cam[0].GetComponent<Transform>().position;
+            transform.rotation=cam[0].GetComponent<Transform>().rotation;
 
             
             //camを次の奴へ更新(今回はループ)
 
-            //座標を戻してやる
-            cam[_portalIndex].transform.position=_camPos[_portalIndex];
             //更新
             //_portalIndex=(_portalIndex+1)%2;
         }
